@@ -17,14 +17,16 @@ class Member
 
   def borrow_book(book_id)
     if @borrowed_books.include?(book_id)
-      puts "You've already borrowed this book."
-      return
+      raise "You've already borrowed this book."
     end
 
     @borrowed_books << book_id
   end
 
   def return_book(book_id)
+    unless @borrowed_books.include?(book_id)
+      raise "Member '#{name}' hasn't borrowed this book."
+    end
     @borrowed_books.delete(book_id)
   end
 end
