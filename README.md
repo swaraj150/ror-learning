@@ -1,6 +1,6 @@
 # Ruby Learning Journey
 
-A structured repository documenting my Ruby fundamentals and OOP concepts.
+A structured repository documenting my implementation of modules in learning planner.
 Each section contains exercises and mini-projects built while learning Ruby
 in preparation for Ruby on Rails development.
 
