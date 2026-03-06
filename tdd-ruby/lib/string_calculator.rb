@@ -14,8 +14,12 @@ class StringCalculator
 
   def parse(input)
     if input.start_with?("//")
-      delimiter = input[2]
-      numbers   = input.split("\n", 2).last
+      header, numbers = input.split("\n", 2)
+      if(header.include?("["))
+        delimiter = header[/\[(.+)\]/, 1] 
+      else
+        delimiter = input[2]
+      end
       [delimiter, numbers]
     else
       [DEFAULT_DELIMITER, input]
