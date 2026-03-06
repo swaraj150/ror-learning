@@ -23,7 +23,7 @@ class StringCalculator
     return header[2] unless header.include?("[")
 
     delimiters = header.scan(/\[(.+?)\]/).flatten
-    delimiters.length > 1 ? Regexp.union(delimiters) : delimiters.first
+    Regexp.union(delimiters)
   end
 
   def validate_negatives!(nums)
