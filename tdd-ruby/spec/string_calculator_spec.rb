@@ -17,5 +17,9 @@ RSpec.describe StringCalculator do
       it { expect(calculator.add("5,6")).to eq(11) }
       it { expect(calculator.add("5,6,7")).to eq(18) }
     end
+
+    context "handles newline as delimiter" do
+      it { expect(calculator.add("5\n6\n7")).to eq(18) }
+    end
   end
 end
