@@ -5,7 +5,7 @@ class StringCalculator
     return 0 if input.empty?
     delimiter,numbers = parse(input)
     
-    nums = numbers.split(delimiter).map(&:to_i)
+    nums = numbers.split(delimiter).map(&:to_i).reject { |n| n > 1000}
     
     validate_negatives!(nums)
     
