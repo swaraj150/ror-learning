@@ -7,9 +7,8 @@ class StringCalculator
     
     nums = numbers.split(delimiter).map(&:to_i)
     
-    negatives = nums.select(&:negative?)
-    raise ArgumentError, "negatives not allowed: #{negatives.join(", ")}" if negatives.any?
-
+    validate_negatives!(nums)
+    
     nums.sum
   end
 
@@ -21,6 +20,11 @@ class StringCalculator
     else
       [DEFAULT_DELIMITER, input]
     end
+  end
+
+  def validate_negatives!(nums)
+    negatives = nums.select(&:negative?)
+    raise ArgumentError, "negatives not allowed: #{negatives.join(", ")}" if negatives.any?
   end
 
 end
