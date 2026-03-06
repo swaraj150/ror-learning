@@ -16,13 +16,14 @@ class StringCalculator
     return [DEFAULT_DELIMITER, input] unless input.start_with?("//")
 
     header, numbers = input.split("\n", 2)
-    if header.include?("[")
-      delimiters = header.scan(/\[(.+?)\]/).flatten
-      delimiter  = delimiters.length > 1 ? Regexp.union(delimiters) : delimiters.first
-    else
-      delimiter = header[2]
-    end    
-    [delimiter, numbers]
+    [extract_delimiter(header), numbers]
+  end
+
+  def extract_delimiter(header)
+    return header[2] unless header.include?("[")
+
+    delimiters = header.scan(/\[(.+?)\]/).flatten
+    delimiters.length > 1 ? Regexp.union(delimiters) : delimiters.first
   end
 
   def validate_negatives!(nums)
