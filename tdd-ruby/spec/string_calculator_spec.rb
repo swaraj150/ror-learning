@@ -40,5 +40,11 @@ RSpec.describe StringCalculator do
       it { expect(calculator.add("5,1001,6,7")).to eq(18) }
     end
 
+    context "when delimiter has multiple characters" do
+      it "returns sum when delimiter is ***" do
+        expect(calculator.add("//[***]\n5***6***7")).to eq(18)
+      end
+    end
+
   end
 end
