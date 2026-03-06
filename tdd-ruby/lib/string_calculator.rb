@@ -16,8 +16,12 @@ class StringCalculator
     return [DEFAULT_DELIMITER, input] unless input.start_with?("//")
 
     header, numbers = input.split("\n", 2)
-    delimiter = header.include?("[") ? header[/\[(.+)\]/, 1] : header[2]
-    
+    if header.include?("[")
+      delimiters = header.scan(/\[(.+?)\]/).flatten
+      delimiter  = delimiters.length > 1 ? Regexp.union(delimiters) : delimiters.first
+    else
+      delimiter = header[2]
+    end    
     [delimiter, numbers]
   end
 
