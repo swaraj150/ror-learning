@@ -21,5 +21,15 @@ RSpec.describe StringCalculator do
     context "handles newline as delimiter" do
       it { expect(calculator.add("5\n6\n7")).to eq(18) }
     end
+
+    context "when input contains a custom delimiter" do
+      it "returns sum when custom delimiter is ;" do
+        expect(calculator.add("//;\n5;6;7")).to eq(18)
+      end
+
+      it "returns sum when custom delimiter is a $" do
+        expect(calculator.add("//$\n5$6$7")).to eq(18)
+      end
+    end
   end
 end
