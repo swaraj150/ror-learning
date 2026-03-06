@@ -1,7 +1,8 @@
 require 'date'
+require_relative '../modules/printable'
 
 class Member
-
+  include Printable
   attr_writer :name
   attr_reader :id, :join_date, :borrowed_books
 
@@ -29,6 +30,11 @@ class Member
     end
     @borrowed_books.delete(book_id)
   end
+
+  def to_s
+    "Member:\n  ID: #{@id}\n  Name: #{@name}\n  Joined: #{@join_date}\n  Borrowed: #{@borrowed_books}"
+  end
 end
+
   
 

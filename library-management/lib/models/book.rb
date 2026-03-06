@@ -1,4 +1,8 @@
+require_relative '../modules/printable'
+
 class Book
+  include Printable
+
   attr_accessor :title, :author, :quantity
   attr_reader :id
 

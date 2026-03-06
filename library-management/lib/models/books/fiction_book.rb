@@ -4,7 +4,7 @@ class FictionBook < Book
   attr_accessor :genre, :age_rating
 
   def initialize(title, author, quantity, genre, age_rating = "all ages")
-    super(title, author, quantity)       # calls Book's initialize
+    super(title, author, quantity)
     @genre      = genre
     @age_rating = age_rating
   end
