@@ -46,5 +46,11 @@ RSpec.describe StringCalculator do
       end
     end
 
+    context "when input has multiple single-char delimiters" do
+      it "returns sum when delimiters are * and %" do
+        expect(calculator.add("//[*][%]\n5*6%7")).to eq(18)
+      end
+    end
+
   end
 end
