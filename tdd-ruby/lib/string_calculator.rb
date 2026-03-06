@@ -13,17 +13,12 @@ class StringCalculator
   end
 
   def parse(input)
-    if input.start_with?("//")
-      header, numbers = input.split("\n", 2)
-      if(header.include?("["))
-        delimiter = header[/\[(.+)\]/, 1] 
-      else
-        delimiter = input[2]
-      end
-      [delimiter, numbers]
-    else
-      [DEFAULT_DELIMITER, input]
-    end
+    return [DEFAULT_DELIMITER, input] unless input.start_with?("//")
+
+    header, numbers = input.split("\n", 2)
+    delimiter = header.include?("[") ? header[/\[(.+)\]/, 1] : header[2]
+    
+    [delimiter, numbers]
   end
 
   def validate_negatives!(nums)
