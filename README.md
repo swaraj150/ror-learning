@@ -9,7 +9,6 @@ in preparation for Ruby on Rails development.
 ## Table of Contents
 
 - [Repository Structure](#repository-structure)
-- [Resources](#resources)
 - [Roadmap](#roadmap)
 
 ---
