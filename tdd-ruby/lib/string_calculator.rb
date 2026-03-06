@@ -4,7 +4,13 @@ class StringCalculator
   def add(input)
     return 0 if input.empty?
     delimiter,numbers = parse(input)
-    numbers.split(delimiter).sum(&:to_i)
+    
+    nums = numbers.split(delimiter).map(&:to_i)
+    
+    negatives = nums.select(&:negative?)
+    raise ArgumentError, "negatives not allowed: #{negatives.join(", ")}" if negatives.any?
+
+    nums.sum
   end
 
   def parse(input)
