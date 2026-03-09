@@ -9,6 +9,7 @@ in preparation for Ruby on Rails development.
 ## Table of Contents
 
 - [Repository Structure](#repository-structure)
+- [Mini Project - Library Management System](#mini-project-library-management-system)
 - [Roadmap](#roadmap)
 
 ---
@@ -33,6 +34,15 @@ in preparation for Ruby on Rails development.
 │           ├── searchable.rb
 │           ├── printable.rb
 │
+|── tdd-ruby/
+|   |── lib/
+|   |   |── leap_year.rb
+|   |   |── string_calculator.rb
+|   └── spec/
+|       ├── leap_year_spec.rb
+|       ├── string_calculator_spec.rb
+|       ├── spec_helper.rb
+|
 └── README.md
 ```
 
@@ -85,4 +95,7 @@ results.each(&:print_details)
 
 - [x] Ruby fundamentals
 - [x] Ruby OOP and collections
-- [x] Library Management System
+  - [x] Library Management System
+- [x] TDD with Ruby and Rspec
+  - [x] Leap year kata
+  - [x] String calculator kata 
