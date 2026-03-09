@@ -8,5 +8,9 @@ describe "#isLeapYear" do
     context "when input year is non-leap year" do
       it { expect(year.isLeapYear?(2023)).to be false }
     end
+
+    context "when input year is a leap year" do
+      it { expect(year.isLeapYear?(2024)).to be true }
+    end
   end
 end
