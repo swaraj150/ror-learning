@@ -24,6 +24,8 @@ describe "#isLeapYear" do
     
     context "when input is a century year which is leap" do
       it { expect(year.isLeapYear?(1600)).to be true }
+      it { expect(year.isLeapYear?(2000)).to be true }
+      it { expect(year.isLeapYear?(1200)).to be true }
       
     end
 
