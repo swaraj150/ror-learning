@@ -1,14 +1,5 @@
-class Year 
-  def isLeapYear?(year)
-    if year % 400 == 0 
-      return true
-    end
-    if year % 100 == 0 && year % 4 == 0 
-      return false
-    end
-    if year % 4 == 0 
-      return true
-    end
-    false
+module Year 
+  def self.leap?(year)
+    (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
   end
 end
