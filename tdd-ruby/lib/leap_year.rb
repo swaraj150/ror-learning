@@ -1,6 +1,6 @@
 class Year 
   def isLeapYear?(year)
-    if year == 1600 
+    if year % 400 == 0 
       return true
     end
     if year % 100 == 0 && year % 4 == 0 
