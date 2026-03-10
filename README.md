@@ -9,14 +9,14 @@ in preparation for Ruby on Rails development.
 ## Table of Contents
 
 - [Repository Structure](#repository-structure)
-- [Mini Project - Library Management System](#mini-project-library-management-system)
+- [Library Management System](#library-management-system)
+- [Book Catalog App](#book-catalog-app)
 - [Roadmap](#roadmap)
 
 ---
 
 ## Repository Structure
 ```
-.
 ├── ruby-basics/                    # Day 1 — fundamentals exercises  
 │
 ├── library-management/             # Day 2 — OOP mini project
@@ -34,7 +34,7 @@ in preparation for Ruby on Rails development.
 │           ├── searchable.rb
 │           ├── printable.rb
 │
-|── tdd-ruby/
+|── tdd-ruby/                       # Day 3 - TDD with Rspec
 |   |── lib/
 |   |   |── leap_year.rb
 |   |   |── string_calculator.rb
@@ -43,10 +43,11 @@ in preparation for Ruby on Rails development.
 |       ├── string_calculator_spec.rb
 |       ├── spec_helper.rb
 |
+├── book-catalog-app/               # Day 4 - Rails Setup MVC & First Rails App                     
 └── README.md
 ```
 
-### Mini Project: Library Management System
+## Library Management System
 
 A working library system demonstrating OOP design principles in Ruby.
 
@@ -88,6 +89,15 @@ library.return_book(1, 1)
 results = library.search_by_title("dune")
 results.each(&:print_details)
 ```
+## Book Catalog App
+
+#### Books List
+
+<img width="1918" height="961" alt="image" src="https://github.com/user-attachments/assets/a927537a-e4ab-48a6-89cb-595cba116628" />
+
+#### Book Details
+
+<img width="1913" height="962" alt="image" src="https://github.com/user-attachments/assets/29579926-71a3-4d25-a3bb-01bfd6de1261" />
 
 ---
 
@@ -98,4 +108,6 @@ results.each(&:print_details)
   - [x] Library Management System
 - [x] TDD with Ruby and Rspec
   - [x] Leap year kata
-  - [x] String calculator kata 
+  - [x] String calculator kata
+- [x] Rails MVC setup and first rails app
+  - [x] Book Catalog App
