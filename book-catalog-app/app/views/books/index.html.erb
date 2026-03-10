@@ -1,0 +1,12 @@
+<!-- app/views/books/index.html.erb -->
+<h1>Book Catalog (<%= @books.count %> books)</h1>
+
+<% @books.each do |book| %>
+  <div>
+    <h2><%= book.title %></h2>
+    <p>by <%= book.author %></p>
+    <p>ISBN: <%= book.isbn %></p>
+
+    <a href="/books/<%= book.id %>">View Details</a>
+  </div>
+<% end %>
