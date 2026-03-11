@@ -11,6 +11,7 @@ in preparation for Ruby on Rails development.
 - [Repository Structure](#repository-structure)
 - [Library Management System](#library-management-system)
 - [Book Catalog App](#book-catalog-app)
+- [Task Manager App](#task-manager-app)
 - [Roadmap](#roadmap)
 
 ---
@@ -43,7 +44,10 @@ in preparation for Ruby on Rails development.
 |       ├── string_calculator_spec.rb
 |       ├── spec_helper.rb
 |
-├── book-catalog-app/               # Day 4 - Rails Setup MVC & First Rails App                     
+├── book-catalog-app/               # Day 4 - Rails Setup MVC & First Rails App 
+| 
+├── task_manager/               
+|  
 └── README.md
 ```
 
@@ -100,6 +104,35 @@ results.each(&:print_details)
 <img width="1913" height="962" alt="image" src="https://github.com/user-attachments/assets/29579926-71a3-4d25-a3bb-01bfd6de1261" />
 
 ---
+## Task Manager App
+### Database Models
+
+#### Users
+| Column | Type |
+|--------|------|
+| id | integer | 
+| name | string | 
+| email | string |
+| password_digest | string | 
+| created_at | datetime | 
+| updated_at | datetime |
+
+#### Tasks
+| Column | Type | 
+|--------|------|
+| id | integer | 
+| title | string | 
+| description | text | 
+| status | string |
+| priority | integer | 
+| due_date | datetime | 
+| user_id | integer | 
+| created_at | datetime | 
+| updated_at | datetime | 
+
+#### Associations
+- A **User** has many **Tasks** (`has_many :tasks, dependent: :destroy`)
+- A **Task** belongs to a **User** (`belongs_to :user`)
 
 ## Roadmap
 
@@ -111,3 +144,6 @@ results.each(&:print_details)
   - [x] String calculator kata
 - [x] Rails MVC setup and first rails app
   - [x] Book Catalog App
+- [x] Active Record Database & Migrations
+  - [x] intialized Task Manager App with models and associations
+
