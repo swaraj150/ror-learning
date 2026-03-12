@@ -1,35 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'validations' do
-    it 'is valid with valid attributes' do
-      user = User.new(name: 'John', email: "john@abc.com")
-      expect(user).to be_valid
-    end
 
-    it 'is invalid without a name' do
-      user = User.new(name: nil)
-      expect(user).not_to be_valid
-    end
+  subject { User.new(name: 'John', email: 'john@abc.com', password_digest: 'foobarbazz' ) }
 
-    it 'is invalid without a email' do
-      user = User.new(email: nil)
-      expect(user).not_to be_valid
-    end
-    it 'is invalid with a duplicate email' do
-      User.create!(name: "John", email: "john@abc.com")
-      user = User.new(name: "John", email: "john@abc.com")
-      expect(user).not_to be_valid
-    end
+   describe 'validations' do
+
+    it { is_expected.to validate_presence_of(:name) }
+
+    it { is_expected.to validate_presence_of(:email) }
+
+    it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+
+    it { is_expected.to validate_length_of(:password_digest).is_at_least(8).is_at_most(20) }
+
   end
 
-  describe 'assocations' do
-    it 'has many tasks' do
-      user = User.new
-      expect(user).to respond_to(:tasks)
-    end
+  describe 'associations' do
+    it { is_expected.to have_many(:tasks).dependent(:destroy) }
   end
-
 
 
 end

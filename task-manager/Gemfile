@@ -68,3 +68,5 @@ end
 gem "pg", "~> 1.6"
 
 gem "rspec-rails", "~> 8.0"
+
+gem "shoulda-matchers", "~> 7.0"
