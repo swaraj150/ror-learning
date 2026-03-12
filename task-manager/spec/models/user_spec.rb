@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
-  subject { User.new(name: 'John', email: 'john@abc.com', password_digest: 'foobarbazz' ) }
-
+  subject { build(:user) }
    describe 'validations' do
 
     it { is_expected.to validate_presence_of(:name) }
