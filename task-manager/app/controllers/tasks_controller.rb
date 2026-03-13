@@ -1,0 +1,55 @@
+class TasksController < ApplicationController
+  before_action :set_user
+  before_action :set_task, only: [:show, :update, :destroy]
+
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
+  def index
+    @tasks = @user.tasks
+    puts @user
+    render json: @tasks, status: :ok
+  end
+
+  def show
+    render json: @task, status: :ok
+  end
+
+  def create
+    @task = @user.tasks.build(task_params)
+    if @task.save
+      render json: @task, status: :created
+    else
+      render json: { errors: @task.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @task.update(task_params)
+      render json: @task, status: :ok
+    else
+      render json: { errors: @task.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @task.destroy
+    render json: { message: 'Task deleted successfully' }, status: :ok
+  end
+
+  private
+
+  def set_user
+    @user = User.find(params[:user_id])
+  end
+  def set_task
+    @task = Task.find(params[:id])
+  end
+
+  def task_params
+    params.require(:task).permit(:title, :description, :status, :priority, :due_date)
+  end
+
+  def record_not_found(exception)
+    render json: { error: exception.model + " not found" }, status: :not_found
+  end
+end
