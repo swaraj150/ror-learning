@@ -181,18 +181,18 @@ spec/
 
 ## Roadmap
 
-- [x] Ruby fundamentals
-- [x] Ruby OOP and collections
-  - [x] Library Management System
-- [x] TDD with Ruby and Rspec
-  - [x] Leap year kata
-  - [x] String calculator kata
-- [x] Rails MVC setup and first rails app
-  - [x] Book Catalog App
-- [x] Active Record Database & Migrations
-  - [x] intialized Task Manager App with models and associations
-- [x] Rails Testing with RSpec & FactoryBot
-  - [x] Add model validations and define routes and controller methods for User and Task models
-  - [x] Test model validations and associations for User and Task
-  - [x] Test Http response and status codes for endpoints
+- ✅ Ruby fundamentals
+- ✅ Ruby OOP and collections
+  - ✅ Library Management System
+- ✅ TDD with Ruby and Rspec
+  - ✅ Leap year kata
+  - ✅ String calculator kata
+- ✅ Rails MVC setup and first rails app
+  - ✅ Book Catalog App
+- ✅ Active Record Database & Migrations
+  - ✅ intialized Task Manager App with models and associations
+- ✅ Rails Testing with RSpec & FactoryBot
+  - ✅ Add model validations and define routes and controller methods for User and Task models
+  - ✅ Test model validations and associations for User and Task
+  - ✅ Test Http response and status codes for endpoints
 
