@@ -133,6 +133,51 @@ results.each(&:print_details)
 #### Associations
 - A **User** has many **Tasks** (`has_many :tasks, dependent: :destroy`)
 - A **Task** belongs to a **User** (`belongs_to :user`)
+---
+### API Endpoints
+ 
+All task endpoints are nested under users — a task always belongs to a user.
+ 
+#### Users
+ 
+| Method | Endpoint       | Description       |
+|--------|----------------|-------------------|
+| GET    | /users         | Get all users     |
+| GET    | /users/:id     | Get a user        |
+| POST   | /users         | Create a user     |
+| PATCH  | /users/:id     | Update a user     |
+| DELETE | /users/:id     | Delete a user     |
+ 
+#### Tasks (nested under Users)
+ 
+| Method | Endpoint                        | Description          |
+|--------|---------------------------------|----------------------|
+| GET    | /users/:user_id/tasks           | Get all tasks for user |
+| GET    | /users/:user_id/tasks/:id       | Get a task           |
+| POST   | /users/:user_id/tasks           | Create a task        |
+| PATCH  | /users/:user_id/tasks/:id       | Update a task        |
+| DELETE | /users/:user_id/tasks/:id       | Delete a task        |
+ 
+---
+ 
+### Test Structure
+```
+spec/
+├── rails_helper.rb
+├── spec_helper.rb
+├── factories/
+│   ├── users.rb
+│   └── tasks.rb
+├── models/
+│   ├── user_spec.rb
+│   └── task_spec.rb
+├── requests/
+│   ├── users_spec.rb
+│   └── tasks_spec.rb
+└── support/
+    └── database_cleaner.rb
+```
+---
 
 ## Roadmap
 
@@ -146,4 +191,8 @@ results.each(&:print_details)
   - [x] Book Catalog App
 - [x] Active Record Database & Migrations
   - [x] intialized Task Manager App with models and associations
+- [x] Rails Testing with RSpec & FactoryBot
+  - [x] Add model validations and define routes and controller methods for User and Task models
+  - [x] Test model validations and associations for User and Task
+  - [x] Test Http response and status codes for endpoints
 
