@@ -1,7 +1,7 @@
 require 'rails_helper'
 RSpec.describe 'Users', type: :request do
   let!(:user) { create(:user) }
-  let(:valid_params)   { { user: { name: 'John', email: 'john@example.com', password_digest: 'foobarbazz' } } }
+  let(:valid_params)   { { user: { name: 'John', email: 'john@example.com', password: 'foobarbazz' } } }
   let(:invalid_params) { { user: { name: nil, email: nil } } }
 
   describe 'GET /users' do
@@ -48,14 +48,14 @@ RSpec.describe 'Users', type: :request do
           post '/users', params: invalid_params
         }.not_to change(User, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
   describe 'PATCH /users/:id' do
     context 'with valid params' do
       it 'updates the user' do
-        patch "/users/#{user.id}", params: { user: { name: 'Updated' } }
+        patch "/users/#{user.id}", params: { user: { name: 'Updated', email: user.email, password: user.password } }
         expect(response).to have_http_status(:ok)
         expect(user.reload.name).to eq('Updated')
       end
