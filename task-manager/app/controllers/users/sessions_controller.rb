@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
-class User::SessionsController < Devise::SessionsController
+class Users::SessionsController < Devise::SessionsController
+  skip_before_action :authenticate_user!, only: [ :create ]
   respond_to :json
 
   def create
     @user = User.find_by(email: params[:user][:email])
     if @user&.valid_password?(params[:user][:password])
+      jwt_token = JwtService.encode({ user_id: @user.id })
       render json: {
         message: "Logged in successfully",
+        token: jwt_token,
         user: user_json(@user)
       }, status: :created
     else
