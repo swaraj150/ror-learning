@@ -76,3 +76,5 @@ gem "factory_bot", "~> 6.5"
 gem "factory_bot_rails", "~> 6.5"
 
 gem "database_cleaner-active_record", "~> 2.2"
+
+gem "bcrypt", "~> 3.1"
