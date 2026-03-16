@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-  def show 
+  def show
     @user = User.find(params[:id])
     render json: @user
   end
@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     if @user.save
       render json: @user, status: :created
     else
-      render json: { errors: @user.errors }, status: :unprocessable_entity
+      render json: { errors: @user.errors }, status: :unprocessable_content
     end
   end
 
@@ -24,22 +24,22 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       render json: @user, status: :ok
     else
-      render json: { errors: @user.errors }, status: :unprocessable_entity
+      render json: { errors: @user.errors }, status: :unprocessable_content
     end
   end
 
   def destroy
-    user = User.find(params[:id])
+    @user = User.find(params[:id])
 
-    if user.destroy
+    if @user.destroy
       render json: { message: "User deleted successfully" }, status: :ok
     else
-      render json: { errors: user.errors }, status: :unprocessable_entity
+      render json: { errors: @user.errors }, status: :unprocessable_content
     end
   end
 
 
   def user_params
-    params.require(:user).permit(:name, :email,:password_digest)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 end

@@ -64,7 +64,7 @@ RSpec.describe 'Tasks', type: :request do
         expect {
           post "/users/#{user.id}/tasks", params: invalid_params
         }.not_to change(Task, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -81,7 +81,7 @@ RSpec.describe 'Tasks', type: :request do
     context 'with invalid params' do
       it 'returns 422' do
         patch "/users/#{user.id}/tasks/#{task.id}", params: { task: { title: nil } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
