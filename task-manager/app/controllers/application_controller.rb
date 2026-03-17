@@ -1,10 +1,10 @@
-class ApplicationController < ActionController::Base
-  before_action :authenticate_user!
+class ApplicationController < ActionController::API
+  before_action :authenticate_request!
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  # allow_browser versions: :modern
 
   # Changes to the importmap will invalidate the etag for HTML responses
-  stale_when_importmap_changes
+  # stale_when_importmap_changes
 
   private
   def extract_token
@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     header&.split(" ")&.last  # "Bearer <token>" → "<token>"
   end
 
-  def authenticate_user!
+  def authenticate_request!
     token = extract_token
     unless token
       render json: { error: "No token provided" }, status: :unauthorized and return
@@ -30,5 +30,11 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user
+  end
+
+  def require_admin!
+    unless current_user&.admin?
+      render json: { error: "Admin access required" }, status: :forbidden
+    end
   end
 end

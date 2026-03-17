@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
-  skip_before_action :authenticate_user!, only: [ :create ]
+  skip_before_action :authenticate_request!, only: [ :create ]
+  skip_before_action :verify_signed_out_user, only: [ :destroy ]
   respond_to :json
 
   def create
@@ -15,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
         access_token:  access_token,
         refresh_token: refresh_token,
         user: user_json(@user)
-      }, status: :created
+      }, status: :ok
     else
         render json: { error: "Invalid email or password" }, status: :unauthorized
     end
@@ -24,7 +25,6 @@ class Users::SessionsController < Devise::SessionsController
   def refresh
     token = extract_token
     decoded = JwtService.decode(token)
-    puts decoded
     unless decoded[:type] == "refresh"
       render json: { error: "Invalid token type" }, status: :unauthorized and return
     end
@@ -39,6 +39,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
+    current_user&.update_column(:refresh_token, nil)
     render json: { message: "Logged out successfully" }, status: :ok
   end
 

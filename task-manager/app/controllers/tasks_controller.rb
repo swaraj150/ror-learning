@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :set_user
-  before_action :set_task, only: [:show, :update, :destroy]
+  before_action :set_task, only: [ :show, :update, :destroy ]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 

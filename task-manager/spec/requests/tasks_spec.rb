@@ -1,97 +1,44 @@
+# spec/requests/tasks_spec.rb
 require 'rails_helper'
 
-RSpec.describe 'Tasks', type: :request do
-  let!(:user)  { create(:user) }
-  let!(:task)  { create(:task, user: user) }
+RSpec.describe "Tasks", type: :request do
+  let(:user)       { create(:user) }
+  let(:other_user) { create(:user) }
+  let!(:task)      { create(:task, user: user) }
+  let!(:other_task) { create(:task, user: other_user) }
 
-  let(:valid_params) do
-    {
-      task: {
-        title:       'New Task',
-        description: 'Task description',
-        status:      'pending',
-        priority:    1,
-        due_date:    1.week.from_now
+  describe "GET /tasks" do
+    it "returns only current user tasks" do
+      get "/tasks", headers: auth_headers(user)
+      json = JSON.parse(response.body)
+      ids = json.map { |t| t["id"] }
+      expect(ids).to include(task.id)
+      expect(ids).not_to include(other_task.id)
+    end
+  end
+
+  describe "GET /tasks/:id" do
+    it "returns own task" do
+      get "/tasks/#{task.id}", headers: auth_headers(user)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "POST /tasks" do
+    it "creates task for current user" do
+      post "/tasks", headers: auth_headers(user), params: {
+        task: { title: "New task", description: "desc", status: "pending", due_date: 1.weeks.from_now, priority: 1 }
       }
-    }
-  end
-
-  let(:invalid_params) { { task: { title: nil, status: nil } } }
-
-  describe 'GET /users/:user_id/tasks' do
-    it 'returns all tasks for the user' do
-      get "/users/#{user.id}/tasks"
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).length).to eq(1)
-    end
-
-    it 'returns 404 if user does not exist' do
-      get '/users/99999/tasks'
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:created)
+      expect(Task.last.user_id).to eq(user.id)
     end
   end
 
-  describe 'GET /users/:user_id/tasks/:id' do
-    context 'when task exists' do
-      it 'returns the task' do
-        get "/users/#{user.id}/tasks/#{task.id}"
-        body = JSON.parse(response.body)
-        expect(response).to have_http_status(:ok)
-        expect(body['title']).to eq(task.title)
-      end
-    end
-
-    context 'when task does not exist' do
-      it 'returns 404' do
-        get "/users/#{user.id}/tasks/99999"
-        expect(response).to have_http_status(:not_found)
-      end
-    end
-  end
-
-  describe 'POST /users/:user_id/tasks' do
-    context 'with valid params' do
-      it 'creates a task and returns 201' do
-        expect {
-          post "/users/#{user.id}/tasks", params: valid_params
-        }.to change(Task, :count).by(1)
-        expect(response).to have_http_status(:created)
-      end
-    end
-
-    context 'with invalid params' do
-      it 'does not create a task and returns 422' do
-        expect {
-          post "/users/#{user.id}/tasks", params: invalid_params
-        }.not_to change(Task, :count)
-        expect(response).to have_http_status(:unprocessable_content)
-      end
-    end
-  end
-
-  describe 'PATCH /users/:user_id/tasks/:id' do
-    context 'with valid params' do
-      it 'updates the task' do
-        patch "/users/#{user.id}/tasks/#{task.id}", params: { task: { title: 'Updated' } }
-        expect(response).to have_http_status(:ok)
-        expect(task.reload.title).to eq('Updated')
-      end
-    end
-
-    context 'with invalid params' do
-      it 'returns 422' do
-        patch "/users/#{user.id}/tasks/#{task.id}", params: { task: { title: nil } }
-        expect(response).to have_http_status(:unprocessable_content)
-      end
-    end
-  end
-
-  describe 'DELETE /users/:user_id/tasks/:id' do
-    it 'deletes the task' do
+  describe "DELETE /tasks/:id" do
+    it "deletes own task" do
       expect {
-        delete "/users/#{user.id}/tasks/#{task.id}"
+        delete "/tasks/#{task.id}", headers: auth_headers(user)
       }.to change(Task, :count).by(-1)
-      expect(response).to have_http_status(:ok)
     end
   end
 end

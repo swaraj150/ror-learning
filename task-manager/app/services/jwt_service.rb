@@ -4,7 +4,7 @@ class JwtService
   REFRESH_EXPIRY = 30.days.to_i
 
   def self.encode_access(payload)
-    payload[:exp] = Time.now.to_i + ACCESS_EXPIRY
+    payload[:exp] ||= Time.now.to_i + ACCESS_EXPIRY
     payload[:type] = "access"
     JWT.encode(payload, SECRET_KEY, "HS256")
   end
