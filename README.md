@@ -134,30 +134,65 @@ results.each(&:print_details)
 - A **User** has many **Tasks** (`has_many :tasks, dependent: :destroy`)
 - A **Task** belongs to a **User** (`belongs_to :user`)
 ---
+### Authentication
+
+Authentication is handled by **Devise** with **JWT tokens**.
+
+#### Flow
+1. User registers via `POST /users`
+2. User logs in via `POST /users/sign_in` — receives access token and refresh token
+3. Access token is sent on every request via `Authorization: Bearer <token>` header
+4. When access token expires, use `POST /users/refresh` with refresh token to get a new one
+5. Logout via `DELETE /users/sign_out` — clears refresh token from database
+
+#### Token details
+
+| Token | Expiry | Storage |
+|---|---|---|
+| Access token | 24 hours | Client only |
+| Refresh token | 30 days | Client + Database |
+
+---
+
+### Authorization
+
+- All task endpoints are scoped to the authenticated user via `current_user`
+- Users can only access and modify their own tasks — cross-user access returns 404
+- Role-based access control via `enum :role, { user: 0, admin: 1 }`
+- Admin-only endpoints protected with `require_admin!` helper
+
+---
+
 ### API Endpoints
- 
-All task endpoints are nested under users — a task always belongs to a user.
- 
+
+#### Auth
+
+| Method | Endpoint | Auth required | Description |
+|--------|----------|---------------|-------------|
+| POST | /users | No | Register |
+| POST | /users/sign_in | No | Login — returns tokens |
+| DELETE | /users/sign_out | Yes | Logout — clears refresh token |
+| POST | /users/refresh | Yes (refresh token) | Get new access token |
+| PATCH | /users | Yes | Update account |
+| DELETE | /users | Yes | Delete account |
+
 #### Users
- 
-| Method | Endpoint       | Description       |
-|--------|----------------|-------------------|
-| GET    | /users         | Get all users     |
-| GET    | /users/:id     | Get a user        |
-| POST   | /users         | Create a user     |
-| PATCH  | /users/:id     | Update a user     |
-| DELETE | /users/:id     | Delete a user     |
- 
-#### Tasks (nested under Users)
- 
-| Method | Endpoint                        | Description          |
-|--------|---------------------------------|----------------------|
-| GET    | /users/:user_id/tasks           | Get all tasks for user |
-| GET    | /users/:user_id/tasks/:id       | Get a task           |
-| POST   | /users/:user_id/tasks           | Create a task        |
-| PATCH  | /users/:user_id/tasks/:id       | Update a task        |
-| DELETE | /users/:user_id/tasks/:id       | Delete a task        |
- 
+
+| Method | Endpoint | Auth required | Description |
+|--------|----------|---------------|-------------|
+| GET | /users | Yes (admin) | Get all users |
+| GET | /users/:id | Yes | Get a user |
+
+#### Tasks
+
+| Method | Endpoint | Auth required | Description |
+|--------|----------|---------------|-------------|
+| GET | /tasks | Yes | Get all tasks for current user |
+| GET | /tasks/:id | Yes | Get a task |
+| POST | /tasks | Yes | Create a task |
+| PATCH | /tasks/:id | Yes | Update a task |
+| DELETE | /tasks/:id | Yes | Delete a task |
+
 ---
  
 ### Test Structure
@@ -172,9 +207,14 @@ spec/
 │   ├── user_spec.rb
 │   └── task_spec.rb
 ├── requests/
+│   ├── users/
+│   │   ├── registrations_spec.rb
+│   │   └── sessions_spec.rb
+│   ├── authentication_spec.rb
 │   ├── users_spec.rb
 │   └── tasks_spec.rb
 └── support/
+    ├── jwt_helper.rb
     └── database_cleaner.rb
 ```
 ---
@@ -195,4 +235,11 @@ spec/
   - ✅ Add model validations and define routes and controller methods for User and Task models
   - ✅ Test model validations and associations for User and Task
   - ✅ Test Http response and status codes for endpoints
+- ✅ Authentication & Authorization
+  - ✅ Devise setup and API configuration
+  - ✅ JWT token generation and verification
+  - ✅ Access token and refresh token flow
+  - ✅ Role-based access control
+  - ✅ Resource scoping — users can only access their own tasks
+  - ✅ Test authentication flow with RSpec
 
