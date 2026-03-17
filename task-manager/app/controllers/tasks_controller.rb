@@ -6,7 +6,6 @@ class TasksController < ApplicationController
 
   def index
     @tasks = @user.tasks
-    puts @user
     render json: @tasks, status: :ok
   end
 
@@ -33,13 +32,13 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    render json: { message: 'Task deleted successfully' }, status: :ok
+    render json: { message: "Task deleted successfully" }, status: :ok
   end
 
   private
 
   def set_user
-    @user = User.find(params[:user_id])
+    @user = current_user
   end
   def set_task
     @task = Task.find(params[:id])

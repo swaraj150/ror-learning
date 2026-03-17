@@ -1,6 +1,6 @@
 class JwtService
   SECRET_KEY = Rails.application.secret_key_base
-  ACCESS_EXPIRY     = 24.seconds.to_i
+  ACCESS_EXPIRY     = 24.hours.to_i
   REFRESH_EXPIRY = 30.days.to_i
 
   def self.encode_access(payload)

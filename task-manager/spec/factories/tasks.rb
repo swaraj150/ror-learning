@@ -5,7 +5,7 @@ FactoryBot.define do
     status                 { 'pending' }
     priority               { 1 }
     due_date               { 1.week.from_now }
-    association :user      
+    association :user
   end
 
   trait :completed do
