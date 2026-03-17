@@ -7,13 +7,61 @@ RSpec.describe "Tasks", type: :request do
   let!(:task)      { create(:task, user: user) }
   let!(:other_task) { create(:task, user: other_user) }
 
-  describe "GET /tasks" do
-    it "returns only current user tasks" do
-      get "/tasks", headers: auth_headers(user)
-      json = JSON.parse(response.body)
-      ids = json.map { |t| t["id"] }
-      expect(ids).to include(task.id)
-      expect(ids).not_to include(other_task.id)
+  describe 'GET /tasks' do
+    before { create_list(:task, 15, user: user) }
+
+    context 'with default pagination' do
+      it 'returns first 10 tasks with meta' do
+        get '/tasks', headers: auth_headers(user)
+
+        expect(response).to have_http_status(:ok)
+
+        json = response.parsed_body
+        expect(json['tasks'].length).to eq(10)
+        expect(json['meta']['current_page']).to eq(1)
+        expect(json['meta']['total_count']).to eq(16)
+        expect(json['meta']['total_pages']).to eq(2)
+        expect(json['meta']['next_page']).to eq(2)
+        expect(json['meta']['prev_page']).to be_nil
+      end
+    end
+
+    context 'with custom page and per_page' do
+      it 'returns correct page and count' do
+        get '/tasks', headers: auth_headers(user), params: { page: 2, per_page: 5 }
+
+        json = response.parsed_body
+        expect(json['tasks'].length).to eq(5)
+        expect(json['meta']['current_page']).to eq(2)
+        expect(json['meta']['prev_page']).to eq(1)
+      end
+    end
+
+    context 'with per_page exceeding max' do
+      it 'clamps to max_per_page' do
+        get '/tasks', headers: auth_headers(user), params: { per_page: 9999 }
+
+        json = response.parsed_body
+        expect(json['meta']['per_page']).to eq(Kaminari.config.max_per_page)
+      end
+    end
+
+    context 'with invalid page' do
+      it 'defaults to page 1' do
+        get '/tasks', headers: auth_headers(user), params: { page: -1 }
+
+        json = response.parsed_body
+        expect(json['meta']['current_page']).to eq(1)
+      end
+    end
+
+    context 'on last page' do
+      it 'returns nil for next_page' do
+        get '/tasks', headers: auth_headers(user), params: { page: 2, per_page: 10 }
+
+        json = response.parsed_body
+        expect(json['meta']['next_page']).to be_nil
+      end
     end
   end
 

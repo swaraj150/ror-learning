@@ -6,7 +6,10 @@ class TasksController < ApplicationController
 
   def index
     @tasks = @user.tasks
-    render json: @tasks, status: :ok
+                  .order(created_at: :desc)
+                  .page(page)
+                  .per(per_page)
+    render json: {tasks: @tasks, meta: pagination_meta(@tasks)}, status: :ok
   end
 
   def show
@@ -50,5 +53,14 @@ class TasksController < ApplicationController
 
   def record_not_found(exception)
     render json: { error: exception.model + " not found" }, status: :not_found
+  end
+
+  def page
+    (request.headers['X-Page'] || params[:page] || 1).to_i
+  end
+
+  def per_page
+    per = (params[:per_page] || Kaminari.config.default_per_page).to_i
+    per.clamp(1, Kaminari.config.max_per_page)
   end
 end
