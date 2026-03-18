@@ -75,7 +75,7 @@ RSpec.describe "Tasks", type: :request do
   describe "POST /tasks" do
     it "creates task for current user" do
       post "/tasks", headers: auth_headers(user), params: {
-        task: { title: "New task", description: "desc", status: "pending", due_date: 1.weeks.from_now, priority: 1 }
+        task: { title: "New task", description: "desc", status: "todo", due_date: 1.weeks.from_now, priority: :low }
       }
       expect(response).to have_http_status(:created)
       expect(Task.last.user_id).to eq(user.id)

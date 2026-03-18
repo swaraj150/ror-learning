@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :task do
     sequence(:title)       { |n| "Task #{n}" }
     description            { 'Sample task description' }
-    status                 { 'pending' }
+    status                 { 'todo' }
     priority               { 1 }
     due_date               { 1.week.from_now }
     association :user
