@@ -242,4 +242,10 @@ spec/
   - ✅ Role-based access control
   - ✅ Resource scoping — users can only access their own tasks
   - ✅ Test authentication flow with RSpec
+- ✅ Advanced Features
+  - ✅ Pagination
+  - ✅ Filtering & Searching
+  - ✅ Sorting
+  - ✅ API Serializers
+  - ✅ Error Handling
 
