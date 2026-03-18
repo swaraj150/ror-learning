@@ -10,27 +10,27 @@ class TasksController < ApplicationController
     sorted = TaskSorter.new(filtered, query_params).apply
 
     @tasks = sorted.page(page).per(per_page)
-    render json: { tasks: @tasks, meta: pagination_meta(@tasks) }, status: :ok
+    render json: @tasks, each_serializer: TaskSerializer, meta: pagination_meta(@tasks), status: :ok
   end
 
   def show
-    render json: @task, status: :ok
+    render json: @task, serializer: TaskDetailSerializer, status: :ok
   end
 
   def create
     @task = @user.tasks.build(task_params)
     if @task.save
-      render json: @task, status: :created
+      render json: @task, serializer: TaskDetailSerializer, status: :created
     else
-      render json: { errors: @task.errors }, status: :unprocessable_content
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
     end
   end
 
   def update
     if @task.update(task_params)
-      render json: @task, status: :ok
+      render json: @task, serializer: TaskDetailSerializer, status: :ok
     else
-      render json: { errors: @task.errors }, status: :unprocessable_content
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
     end
   end
 
