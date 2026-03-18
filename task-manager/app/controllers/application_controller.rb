@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include Paginable
+  include ErrorHandler
   before_action :authenticate_request!
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
@@ -10,23 +11,19 @@ class ApplicationController < ActionController::API
   private
   def extract_token
     header = request.headers["Authorization"]
-    header&.split(" ")&.last  # "Bearer <token>" → "<token>"
+    token  = header&.split(" ")&.last
+    raise UnauthorizedError.new("No token provided") if token.blank?
+    token
   end
 
   def authenticate_request!
     token = extract_token
-    unless token
-      render json: { error: "No token provided" }, status: :unauthorized and return
+    decoded = JwtService.decode(token)
+    unless decoded[:type] == "access"
+      raise UnauthorizedError.new("Invalid token type")
     end
-
-    begin
-      decoded  = JwtService.decode(token)
-      @current_user = User.find(decoded[:user_id])
-    rescue ActiveRecord::RecordNotFound
-      render json: { error: "User not found" }, status: :unauthorized
-    rescue RuntimeError => e
-      render json: { error: e.message }, status: :unauthorized
-    end
+    @current_user = User.find(decoded[:user_id])
+    raise UnauthorizedError.new("User not found") unless @current_user
   end
 
   def current_user
@@ -34,8 +31,6 @@ class ApplicationController < ActionController::API
   end
 
   def require_admin!
-    unless current_user&.admin?
-      render json: { error: "Admin access required" }, status: :forbidden
-    end
+    aise ForbiddenError unless current_user&.admin?
   end
 end

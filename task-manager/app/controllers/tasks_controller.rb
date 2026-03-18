@@ -2,7 +2,6 @@ class TasksController < ApplicationController
   before_action :set_user
   before_action :set_task, only: [ :show, :update, :destroy ]
 
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     current_scope = current_user.tasks
@@ -19,19 +18,13 @@ class TasksController < ApplicationController
 
   def create
     @task = @user.tasks.build(task_params)
-    if @task.save
-      render json: @task, serializer: TaskDetailSerializer, status: :created
-    else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
-    end
+    @task.save!
+    render json: @task, serializer: TaskDetailSerializer, status: :created
   end
 
   def update
-    if @task.update(task_params)
-      render json: @task, serializer: TaskDetailSerializer, status: :ok
-    else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
-    end
+    @task.update!(task_params)
+    render json: @task, serializer: TaskDetailSerializer, status: :ok
   end
 
   def destroy
@@ -50,10 +43,6 @@ class TasksController < ApplicationController
 
   def task_params
     params.require(:task).permit(:title, :description, :status, :priority, :due_date)
-  end
-
-  def record_not_found(exception)
-    render json: { error: exception.model + " not found" }, status: :not_found
   end
 
   def page

@@ -12,6 +12,7 @@ RSpec.describe "Users::Registrations", type: :request do
         }
       }
     end
+    def error_message = response.parsed_body['error']['message']
 
     context "with valid params" do
       it "creates a new user" do
@@ -48,8 +49,7 @@ RSpec.describe "Users::Registrations", type: :request do
       it "returns errors when password too short" do
         post "/users", params: { user: valid_params[:user].merge(password: "short", password_confirmation: "short") }
         expect(response).to have_http_status(:unprocessable_content)
-        json = JSON.parse(response.body)
-        expect(json["errors"]).to be_present
+        expect(error_message).to be_present
       end
 
       it "returns 422 when name is missing" do

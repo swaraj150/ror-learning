@@ -2,14 +2,13 @@ class UsersController < ApplicationController
   before_action :require_admin!, only: [ :index ]
 
   def index
-    require_admin!
     @users = User.all
-    render json: @user, seach_erializer: UserSerializer
+    render json: @users, each_serializer: UserSerializer
   end
 
   def show
     @user = User.find(params[:id])
-    render json: @users, each_serializer: UserSerializer
+    render json: @user, serializer: UserSerializer
   end
 
   def user_params

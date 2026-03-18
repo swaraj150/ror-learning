@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Authentication", type: :request do
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
+  def error_message = response.parsed_body['error']['message']
 
   describe "protected routes" do
     context "with no token" do
@@ -12,8 +13,7 @@ RSpec.describe "Authentication", type: :request do
 
       it "returns error message" do
         get "/tasks"
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("No token provided")
+        expect(error_message).to eq("No token provided")
       end
     end
 
@@ -29,8 +29,7 @@ RSpec.describe "Authentication", type: :request do
         expired_token = JwtService.encode_access({ user_id: user.id, exp: 1.hour.ago.to_i })
         get "/tasks", headers: { "Authorization" => "Bearer #{expired_token}" }
         expect(response).to have_http_status(:unauthorized)
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("Token has expired")
+        expect(error_message).to eq("Your session has expired, please log in again")
       end
     end
 
@@ -63,8 +62,7 @@ RSpec.describe "Authentication", type: :request do
       it "returns 401" do
         post "/users/refresh", headers: auth_headers(user)
         expect(response).to have_http_status(:unauthorized)
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("Invalid token type")
+        expect(error_message).to eq("Invalid token type")
       end
     end
 

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Users::Sessions", type: :request do
   let!(:user) { create(:user, password: "password123") }
+  def error_message = response.parsed_body['error']['message']
 
   describe "POST /users/sign_in" do
     context "with valid credentials" do
@@ -59,8 +60,7 @@ RSpec.describe "Users::Sessions", type: :request do
         post "/users/sign_in", params: {
           user: { email: user.email, password: "wrong" }
         }
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("Invalid email or password")
+        expect(error_message).to eq("Invalid email or password")
       end
     end
   end
