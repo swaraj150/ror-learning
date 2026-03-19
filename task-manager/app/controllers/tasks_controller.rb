@@ -19,6 +19,7 @@ class TasksController < ApplicationController
   def create
     @task = @user.tasks.build(task_params)
     @task.save!
+    NotifyOnTaskCreateJob.perform_later(@task.id)
     render json: @task, serializer: TaskDetailSerializer, status: :created
   end
 

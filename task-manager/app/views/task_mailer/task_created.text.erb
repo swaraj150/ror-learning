@@ -1,0 +1,11 @@
+Hi <%= @user.name %>,
+
+This is a notification that the following task has been created
+
+Title:    <%= @task.title %>
+Status:   <%= @task.status %>
+Priority: <%= @task.priority %>
+Due Date: <%= @task.due_date.strftime('%B %d, %Y at %I:%M %p') %>
+<% if @task.description.present? %>
+Description: <%= @task.description %>
+<% end %>
