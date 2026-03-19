@@ -210,6 +210,9 @@ spec/
 │   ├── users/
 │   │   ├── registrations_spec.rb
 │   │   └── sessions_spec.rb
+│   ├── swagger/
+│   │   ├── auth_spec.rb
+│   │   └── tasks_spec.rb
 │   ├── authentication_spec.rb
 │   ├── users_spec.rb
 │   └── tasks_spec.rb
@@ -248,4 +251,6 @@ spec/
   - ✅ Sorting
   - ✅ API Serializers
   - ✅ Error Handling
+- ✅ Background Jobs
+- ✅ Swagger Documentation
 
