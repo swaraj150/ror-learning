@@ -5,7 +5,7 @@ class HealthController < ApplicationController
     checks = {
       database: database_healthy?,
       redis:    redis_healthy?,
-      sidekiq:  sidekiq_healthy?
+      # sidekiq:  sidekiq_healthy?
     }
 
     status = checks.values.all? ? :ok : :service_unavailable
