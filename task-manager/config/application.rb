@@ -19,6 +19,7 @@ module TaskManager
     config.session_store :disabled
 
     config.active_job.queue_adapter = :sidekiq
+    config.cache_store = :redis_cache_store, { url: ENV.fetch("REDIS_URL", "redis://redis:6379/0") }  # ← add this
 
     # Configuration for the application, engines, and railties goes here.
     #
