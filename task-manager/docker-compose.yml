@@ -9,6 +9,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U warrior"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   
   redis:
     image: redis:7-alpine
@@ -16,7 +22,52 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  app:
+    build:
+      context: .
+      target: build
+      command: ./bin/rails server -b 0.0.0.0
+      volumes:
+        - .:/rails
+        - bundle_cache:/usr/local/bundle
+      ports:
+        - "3000:3000"
+      env_file:
+        - .env
+      depends_on:
+        db:
+          condition: service_healthy
+        redis:
+          condition: service_healthy
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+
+  sidekiq:
+    build:
+      context: .
+      target: build
+    command: bundle exec sidekiq
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
   redis_data:
+  bundle_cache:

@@ -1,36 +1,17 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: localhost
-  username: warrior
-  password: warrior@2233
   pool: 5
   timeout: 5000
 
 development:
   <<: *default
-  database: task_manager_dev
+  url: <%= ENV["DATABASE_URL"] %>
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   <<: *default
   database: task_manager_test
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-    <<: *default
-    database: task_manager_prod
-  cache:
-    <<: *default
-    database: task_manager_cache
-  queue:
-    <<: *default
-    database: task_manager_queue
-  cable:
-    <<: *default
-    database: task_manager_cable
-  
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>

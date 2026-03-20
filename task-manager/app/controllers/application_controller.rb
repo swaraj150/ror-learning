@@ -33,4 +33,9 @@ class ApplicationController < ActionController::API
   def require_admin!
     aise ForbiddenError unless current_user&.admin?
   end
+
+  def append_info_to_payload(payload)
+    super
+    payload[:user_id] = current_user&.id
+  end
 end
