@@ -1,19 +1,19 @@
-SecureHeaders::Configuration.default do |config|
-  # clickjacking protection
-  config.x_frame_options = "DENY"
-
-  # stop browsers from sniffing content type
-  config.x_content_type_options = "nosniff"
-
-  # XSS protection
-  config.x_xss_protection = "1; mode=block"
-
-  # only send referrer on same origin
-  config.referrer_policy = "strict-origin-when-cross-origin"
-
-  # HTTPS only — enable in production
-  config.hsts = "max-age=#{1.year.to_i}; includeSubDomains" if Rails.env.production?
-
-  # disable for API — CSP is for browsers rendering HTML
-  config.csp = SecureHeaders::OPT_OUT
+# config/initializers/secure_headers.rb
+if Rails.env.test?
+  SecureHeaders::Configuration.default do |config|
+    config.x_frame_options    = SecureHeaders::OPT_OUT
+    config.x_content_type_options = SecureHeaders::OPT_OUT
+    config.x_xss_protection   = SecureHeaders::OPT_OUT
+    config.referrer_policy    = SecureHeaders::OPT_OUT
+    config.csp                = SecureHeaders::OPT_OUT
+  end
+else
+  SecureHeaders::Configuration.default do |config|
+    config.x_frame_options = "DENY"
+    config.x_content_type_options = "nosniff"
+    config.x_xss_protection = "1; mode=block"
+    config.referrer_policy = "strict-origin-when-cross-origin"
+    config.hsts = "max-age=#{1.year.to_i}; includeSubDomains" if Rails.env.production?
+    config.csp = SecureHeaders::OPT_OUT
+  end
 end
