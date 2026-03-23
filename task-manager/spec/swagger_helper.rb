@@ -73,6 +73,10 @@ RSpec.configure do |config|
         {
           url: "http://localhost:3000",
           description: "Development"
+        },
+        {
+          url: "https://task-manager-api-xoa6.onrender.com",
+          description: "Production"
         }
       ]
     }
