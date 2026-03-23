@@ -329,7 +329,7 @@ paths:
         '204':
           description: Task deleted
 servers:
-- url: http://localhost:3000
-  description: Development
 - url: https://task-manager-api-xoa6.onrender.com
   description: Production
+- url: http://localhost:3000
+  description: Development
