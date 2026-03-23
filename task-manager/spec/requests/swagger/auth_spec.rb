@@ -70,7 +70,9 @@ RSpec.describe 'Auth', type: :request do
             access_token:  { type: :string },
             refresh_token: { type: :string }
           }
+        let(:user) { create(:user, email: 'john@example.com', password: 'password123') }
         let(:body) { { user: { email: 'john@example.com', password: 'password123' } } }
+        before { user }
         run_test!
       end
 

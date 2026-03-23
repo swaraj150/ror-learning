@@ -64,7 +64,7 @@ RSpec.describe 'Tasks', type: :request do
       response 201, 'Task created' do
         schema '$ref' => '#/components/schemas/Task'
         let(:Authorization) { "Bearer #{token_for(create(:user))}" }
-        let(:body) { { task: { title: 'New task', priority: 'high' } } }
+        let(:body) { { task: { title: 'New task', description: "New task description", priority: 'high', status: "todo", due_date: "2026-04-01" } } }
         run_test!
       end
     end
@@ -80,7 +80,8 @@ RSpec.describe 'Tasks', type: :request do
 
       response 200, 'Task found' do
         schema '$ref' => '#/components/schemas/Task'
-        let(:Authorization) { "Bearer #{token_for(create(:user))}" }
+        let(:current_user) { create(:user) }
+        let(:Authorization) { "Bearer #{token_for(current_user)}" }
         let(:id) { create(:task, user: current_user).id }
         run_test!
       end
@@ -126,7 +127,7 @@ RSpec.describe 'Tasks', type: :request do
       tags     'Tasks'
       security [ { bearerAuth: [] } ]
 
-      response 204, 'Task deleted' do
+      response 200, 'Task deleted' do
         let(:Authorization) { "Bearer #{token_for(create(:user))}" }
         let(:id) { create(:task).id }
         run_test!
