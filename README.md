@@ -193,8 +193,131 @@ Authentication is handled by **Devise** with **JWT tokens**.
 | PATCH | /tasks/:id | Yes | Update a task |
 | DELETE | /tasks/:id | Yes | Delete a task |
 
+#### Query Parameters (GET /tasks)
+ 
+| Parameter | Type | Description | Example |
+|---|---|---|---|
+| `status` | string | Filter by status | `?status=todo` |
+| `priority` | string | Filter by priority | `?priority=high` |
+| `search` | string | Search by title | `?search=rails` |
+| `sort` | string | Sort field | `?sort=due_date` |
+| `order` | string | Sort direction | `?order=asc` |
+| `page` | integer | Page number | `?page=2` |
+| `per_page` | integer | Items per page | `?per_page=20` |
+---
+
 ---
  
+## Docker
+ 
+### Services
+ 
+| Service | Image | Port |
+|---|---|---|
+| app | custom (Rails) | 3000 |
+| db | postgres:15 | 5432 |
+| redis | redis:7-alpine | 6379 |
+| sidekiq | custom (Rails) | — |
+
+### Common Commands
+ 
+```bash
+# start all services
+docker compose up --build
+ 
+# start in background
+docker compose up -d
+ 
+# view logs
+docker compose logs -f app
+docker compose logs -f sidekiq
+ 
+# stop everything
+docker compose down
+ 
+# wipe all data and start fresh
+docker compose down -v && docker compose up --build
+ 
+# run one-off command
+docker compose exec app bundle exec rails console
+docker compose exec app bundle exec rails db:seed
+```
+
+### Build Production Image
+ 
+```bash
+docker build -t task-manager-api .
+```
+ 
+---
+ 
+## Deployment
+ 
+The app is deployed on **Render** using Docker.
+ 
+### Services on Render
+ 
+| Service | Type | Plan |
+|---|---|---|
+| task-manager-api | Web Service | Free |
+| task-manager-db | PostgreSQL | Free |
+| task-manager-redis | Key Value (Redis) | Free |
+ 
+### Required Environment Variables on Render
+ 
+```
+RAILS_ENV=production
+RAILS_MASTER_KEY=<contents of config/master.key>
+RAILS_LOG_TO_STDOUT=true
+DATABASE_URL=<provided by Render PostgreSQL addon>
+REDIS_URL=<provided by Render Key Value addon>
+```
+ 
+### Deploy
+ 
+Auto-deploys on every push to `main`. To trigger manually:
+ 
+```
+Render Dashboard → your service → Manual Deploy → Deploy latest commit
+```
+ 
+### Health Check
+ 
+```bash
+curl https://task-manager-api-xoa6.onrender.com/health
+```
+ 
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-03-20T12:00:00Z",
+  "checks": {
+    "database": true,
+    "redis": true
+  }
+}
+```
+ 
+---
+ 
+## API Documentation
+ 
+Interactive Swagger UI is available at:
+ 
+```
+https://task-manager-api-xoa6.onrender.com/api-docs
+```
+ 
+To regenerate docs after changing swagger specs:
+ 
+```bash
+docker compose exec app bundle exec rake rswag:specs:swaggerize
+```
+ 
+---
+ 
+ 
+
 ### Test Structure
 ```
 spec/
@@ -253,4 +376,9 @@ spec/
   - ✅ Error Handling
 - ✅ Background Jobs
 - ✅ Swagger Documentation
+- ✅ Swagger Documentation
+- ✅ Render Deployment
+- ✅ Local setup Documentation
+- ✅ Deployement Documentation
+
 
